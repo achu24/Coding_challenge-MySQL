@@ -1,0 +1,347 @@
+             Coding sheet -4
+database creation
+
+create database transport;
+
+use transport;
+
+
+table creation
+
+1. create table vehicle(vehicle_id int primary key, make varchar(50), model varchar(50), year int, dailyRate decimal(5,2), status enum('1','0'), passsengerCapacity int, engineCapacity int);
+
+desc vehicle;
+
+mysql> desc vehicle;
++--------------------+---------------+------+-----+---------+-------+
+| Field              | Type          | Null | Key | Default | Extra |
++--------------------+---------------+------+-----+---------+-------+
+| vehicle_id         | int           | NO   | PRI | NULL    |       |
+| make               | varchar(50)   | YES  |     | NULL    |       |
+| model              | varchar(50)   | YES  |     | NULL    |       |
+| year               | int           | YES  |     | NULL    |       |
+| dailyRate          | decimal(5,2)  | YES  |     | NULL    |       |
+| status             | enum('1','0') | YES  |     | NULL    |       |
+| passsengerCapacity | int           | YES  |     | NULL    |       |
+| engineCapacity     | int           | YES  |     | NULL    |       |
++--------------------+---------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+
+2. create table customer(customerID int primary key, FirstName varchar(200), SecondName varchar(200), email varchar(200), phone_Number int);
+
+desc customer;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| customerID   | int          | NO   | PRI | NULL    |       |
+| FirstName    | varchar(200) | YES  |     | NULL    |       |
+| SecondName   | varchar(200) | YES  |     | NULL    |       |
+| email        | varchar(200) | YES  |     | NULL    |       |
+| phone_number | varchar(50)  | YES  |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+3. create table lease(leaseID int primary key, vehicle_id int, customerID int, startDate date, endDate date, type enum('DailyLease','MonthlyLease'), foreign key(vehicle_id) references vehicle(vehicle_ID), foreign key(customerID) references customer(customerID));
+
+desc lease;
++------------+-----------------------------------+------+-----+---------+-------+
+| Field      | Type                              | Null | Key | Default | Extra |
++------------+-----------------------------------+------+-----+---------+-------+
+| leaseID    | int                               | NO   | PRI | NULL    |       |
+| vehicle_id | int                               | YES  | MUL | NULL    |       |
+| customerID | int                               | YES  | MUL | NULL    |       |
+| startDate  | date                              | YES  |     | NULL    |       |
+| endDate    | date                              | YES  |     | NULL    |       |
+| type       | enum('DailyLease','MonthlyLease') | YES  |     | NULL    |       |
++------------+-----------------------------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+4. create table payment(paymentID int primary key, leaseID int, payment date, amount decimal(10,2), foreign key(leaseID) references lease(leaseID));
+
+desc payment;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| paymentID | int           | NO   | PRI | NULL    |       |
+| leaseID   | int           | YES  | MUL | NULL    |       |
+| payment   | date          | YES  |     | NULL    |       |
+| amount    | decimal(10,2) | YES  |     | NULL    |       |
++-----------+---------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+
+Insertion table
+1. insert into vehicle(vehicle_id, make, model, year, dailyRate, status, passsengerCapacity, engineCapacity)values
+(1, 'Toyota', 'Camry', 2022, 50.00, '1', 4, 1450),(2, 'Honda', 'Civic', 2023, 45.00, '1', 7, 1500),
+(3, 'Ford', 'Focus', 2022, 48.00, '0', 4, 1400),(4, 'Nissan', 'Altima', 2023, 52.00, '1', 7, 1200),
+(5, 'Chevrolet', 'Malibu', 2022, 47.00, '1', 4, 1800),(6, 'Hyundai', 'Sonata', 2023, 49.00, '0', 7, 1400),
+(7, 'BMW', '3 Series', 2023, 60.00, '1', 7, 2499),(8, 'Mercedes', 'C-Class', 2022, 58.00,'1', 8, 2599),
+(9, 'Audi', 'A4', 2022, 55.00, '0', 4, 2500),(10, 'Lexus', 'ES', 2023, 54.00, '1', 4, 2500);
+
+select* from vehicle;
++------------+-----------+----------+------+-----------+--------+--------------------+----------------+
+| vehicle_id | make      | model    | year | dailyRate | status | passsengerCapacity | engineCapacity |
++------------+-----------+----------+------+-----------+--------+--------------------+----------------+
+|          1 | Toyota    | Camry    | 2022 |     50.00 | 1      |                  4 |           1450 |
+|          2 | Honda     | Civic    | 2023 |     45.00 | 1      |                  7 |           1500 |
+|          3 | Ford      | Focus    | 2022 |     48.00 | 0      |                  4 |           1400 |
+|          4 | Nissan    | Altima   | 2023 |     52.00 | 1      |                  7 |           1200 |
+|          5 | Chevrolet | Malibu   | 2022 |     47.00 | 1      |                  4 |           1800 |
+|          6 | Hyundai   | Sonata   | 2023 |     49.00 | 0      |                  7 |           1400 |
+|          7 | BMW       | 3 Series | 2023 |     60.00 | 1      |                  7 |           2499 |
+|          8 | Mercedes  | C-Class  | 2022 |     58.00 | 1      |                  8 |           2599 |
+|          9 | Audi      | A4       | 2022 |     55.00 | 0      |                  4 |           2500 |
+|         10 | Lexus     | ES       | 2023 |     54.00 | 1      |                  4 |           2500 |
++------------+-----------+----------+------+-----------+--------+--------------------+----------------+
+10 rows in set (0.00 sec)
+
+2. insert into customer(customerID, FirstName, SecondName, email, phone_number) values
+(1, 'John', 'Doe', 'johndoe@example.com', '555-555-5555'),(2, 'Jane', 'Smith', 'janesmith@example.com', '555-123-4567'),
+(3, 'Robert', 'Johnson', 'robert@example.com', '555-789-1234'),(4, 'Sarah', 'Brown', 'sarah@example.com', '555-456-7890'),
+(5, 'David', 'Lee', 'david@example.com', '555-987-6543'),(6, 'Laura', 'Hall', 'laura@example.com', '555-234-5678'),
+(7, 'Michael', 'Davis', 'michael@example.com', '555-876-5432'),(8, 'Emma', 'Wilson', 'emma@example.com', '555-432-1098'),
+(9, 'William', 'Taylor', 'william@example.com', '555-321-6547'),(10, 'Olivia', 'Adams', 'olivia@example.com', '555-765-4321');
+
+ select* from customer;
++------------+-----------+------------+-----------------------+--------------+
+| customerID | FirstName | SecondName | email                 | phone_number |
++------------+-----------+------------+-----------------------+--------------+
+|          1 | John      | Doe        | johndoe@example.com   | 555-555-5555 |
+|          2 | Jane      | Smith      | janesmith@example.com | 555-123-4567 |
+|          3 | Robert    | Johnson    | robert@example.com    | 555-789-1234 |
+|          4 | Sarah     | Brown      | sarah@example.com     | 555-456-7890 |
+|          5 | David     | Lee        | david@example.com     | 555-987-6543 |
+|          6 | Laura     | Hall       | laura@example.com     | 555-234-5678 |
+|          7 | Michael   | Davis      | michael@example.com   | 555-876-5432 |
+|          8 | Emma      | Wilson     | emma@example.com      | 555-432-1098 |
+|          9 | William   | Taylor     | william@example.com   | 555-321-6547 |
+|         10 | Olivia    | Adams      | olivia@example.com    | 555-765-4321 |
++------------+-----------+------------+-----------------------+--------------+
+10 rows in set (0.00 sec)
+
+3. insert into lease (leaseID, vehicle_id, customerID, startDate, endDate, type)values
+(1, 1, 1, '2023-01-01', '2023-01-05', 'DailyLease'),(2, 2, 2, '2023-02-15', '2023-02-28', 'MonthlyLease'),
+(3, 3, 3, '2023-03-10', '2023-03-15', 'DailyLease'),(4, 4, 4, '2023-04-20', '2023-04-30', 'MonthlyLease'),
+(5, 5, 5, '2023-05-05', '2023-05-10', 'DailyLease'),(6, 4, 3, '2023-06-15', '2023-06-30', 'MonthlyLease'),
+(7, 7, 7, '2023-07-01', '2023-07-10', 'DailyLease'),(8, 8, 8, '2023-08-12', '2023-08-15', 'MonthlyLease'),
+(9, 3, 3, '2023-09-07', '2023-09-10', 'DailyLease'),(10, 10, 10, '2023-10-10', '2023-10-31', 'MonthlyLease');
+
+ select* from lease;
++---------+------------+------------+------------+------------+--------------+
+| leaseID | vehicle_id | customerID | startDate  | endDate    | type         |
++---------+------------+------------+------------+------------+--------------+
+|       1 |          1 |          1 | 2023-01-01 | 2023-01-05 | DailyLease   |
+|       2 |          2 |          2 | 2023-02-15 | 2023-02-28 | MonthlyLease |
+|       3 |          3 |          3 | 2023-03-10 | 2023-03-15 | DailyLease   |
+|       4 |          4 |          4 | 2023-04-20 | 2023-04-30 | MonthlyLease |
+|       5 |          5 |          5 | 2023-05-05 | 2023-05-10 | DailyLease   |
+|       6 |          4 |          3 | 2023-06-15 | 2023-06-30 | MonthlyLease |
+|       7 |          7 |          7 | 2023-07-01 | 2023-07-10 | DailyLease   |
+|       8 |          8 |          8 | 2023-08-12 | 2023-08-15 | MonthlyLease |
+|       9 |          3 |          3 | 2023-09-07 | 2023-09-10 | DailyLease   |
+|      10 |         10 |         10 | 2023-10-10 | 2023-10-31 | MonthlyLease |
++---------+------------+------------+------------+------------+--------------+
+10 rows in set (0.00 sec)
+
+4. insert into payment(paymentID, leaseID, payment, amount)values
+(1, 1, '2023-01-03', 200.00),(2, 2, '2023-02-20', 1000.00),
+(3, 3, '2023-03-12', 75.00),(4, 4, '2023-04-25', 900.00),
+(5, 5, '2023-05-07', 60.00),(6, 6, '2023-06-18', 1200.00),
+(7, 7, '2023-07-03', 40.00),(8, 8, '2023-08-14', 1100.00),
+(9, 9, '2023-09-09', 80.00),(10, 10, '2023-10-25', 1500.00);
+
+ select*from payment;
++-----------+---------+------------+---------+
+| paymentID | leaseID | payment    | amount  |
++-----------+---------+------------+---------+
+|         1 |       1 | 2023-01-03 |  200.00 |
+|         2 |       2 | 2023-02-20 | 1000.00 |
+|         3 |       3 | 2023-03-12 |   75.00 |
+|         4 |       4 | 2023-04-25 |  900.00 |
+|         5 |       5 | 2023-05-07 |   60.00 |
+|         6 |       6 | 2023-06-18 | 1200.00 |
+|         7 |       7 | 2023-07-03 |   40.00 |
+|         8 |       8 | 2023-08-14 | 1100.00 |
+|         9 |       9 | 2023-09-09 |   80.00 |
+|        10 |      10 | 2023-10-25 | 1500.00 |
++-----------+---------+------------+---------+
+10 rows in set (0.00 sec)
+
+
+queries
+
+1. update vehicle set dailyRate = 68.00 where make="Mercedes";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+2. delete from payment where leaseID in (select leaseId from lease where customerID = 3);
+delete from lease where customerID = 3;
+delete from customer where customerID = 3;
+
+3. alter table payment change payment transactionDate date;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc payment;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| paymentID       | int           | NO   | PRI | NULL    |       |
+| leaseID         | int           | YES  | MUL | NULL    |       |
+| transactionDate | date          | YES  |     | NULL    |       |
+| amount          | decimal(10,2) | YES  |     | NULL    |       |
++-----------------+---------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+4. select * from customer where email like "%olivia%";
++------------+-----------+------------+--------------------+--------------+
+| customerID | FirstName | SecondName | email              | phone_number |
++------------+-----------+------------+--------------------+--------------+
+|         10 | Olivia    | Adams      | olivia@example.com | 555-765-4321 |
++------------+-----------+------------+--------------------+--------------+
+1 row in set (0.00 sec)
+
+5. select * from lease where customerID between (7 and 10) and endDate >=curdate();
+Empty set (0.01 sec)
+
+6.  select * from payment where leaseID in (select leaseId from lease where customerID =(select customerID from customer where phone_number = "555-555-5555"));
++-----------+---------+-----------------+--------+
+| paymentID | leaseID | transactionDate | amount |
++-----------+---------+-----------------+--------+
+|         1 |       1 | 2023-01-03      | 200.00 |
++-----------+---------+-----------------+--------+
+1 row in set (0.00 sec)
+
+7.  select avg(dailyRate) from vehicle where status = 1;
++----------------+
+| avg(dailyRate) |
++----------------+
+|      53.714286 |
++----------------+
+1 row in set (0.00 sec)
+
+8.  select * from vehicle where (select max(dailyRate) from vehicle)order by dailyRate desc limit 1;
++------------+----------+---------+------+-----------+--------+--------------------+----------------+
+| vehicle_id | make     | model   | year | dailyRate | status | passsengerCapacity | engineCapacity |
++------------+----------+---------+------+-----------+--------+--------------------+----------------+
+|          8 | Mercedes | C-Class | 2022 |     68.00 | 1      |                  8 |           2599 |
++------------+----------+---------+------+-----------+--------+--------------------+----------------+
+1 row in set (0.00 sec)
+
+9. select * from vehicle where vehicle_id in(select vehicle_id from lease where customerID = 7);
++------------+------+----------+------+-----------+--------+--------------------+----------------+
+| vehicle_id | make | model    | year | dailyRate | status | passsengerCapacity | engineCapacity |
++------------+------+----------+------+-----------+--------+--------------------+----------------+
+|          7 | BMW  | 3 Series | 2023 |     60.00 | 1      |                  7 |           2499 |
++------------+------+----------+------+-----------+--------+--------------------+----------------+
+1 row in set (0.00 sec)
+
+10. select * from lease order by startDate desc;
++---------+------------+------------+------------+------------+--------------+
+| leaseID | vehicle_id | customerID | startDate  | endDate    | type         |
++---------+------------+------------+------------+------------+--------------+
+|      10 |         10 |         10 | 2023-10-10 | 2023-10-31 | MonthlyLease |
+|       8 |          8 |          8 | 2023-08-12 | 2023-08-15 | MonthlyLease |
+|       7 |          7 |          7 | 2023-07-01 | 2023-07-10 | DailyLease   |
+|       5 |          5 |          5 | 2023-05-05 | 2023-05-10 | DailyLease   |
+|       4 |          4 |          4 | 2023-04-20 | 2023-04-30 | MonthlyLease |
+|       2 |          2 |          2 | 2023-02-15 | 2023-02-28 | MonthlyLease |
+|       1 |          1 |          1 | 2023-01-01 | 2023-01-05 | DailyLease   |
++---------+------------+------------+------------+------------+--------------+
+7 rows in set (0.00 sec)
+
+11.  select * from payment where year(transactionDate) = 2023;
++-----------+---------+-----------------+---------+
+| paymentID | leaseID | transactionDate | amount  |
++-----------+---------+-----------------+---------+
+|         1 |       1 | 2023-01-03      |  200.00 |
+|         2 |       2 | 2023-02-20      | 1000.00 |
+|         4 |       4 | 2023-04-25      |  900.00 |
+|         5 |       5 | 2023-05-07      |   60.00 |
+|         7 |       7 | 2023-07-03      |   40.00 |
+|         8 |       8 | 2023-08-14      | 1100.00 |
+|        10 |      10 | 2023-10-25      | 1500.00 |
++-----------+---------+-----------------+---------+
+7 rows in set (0.00 sec)
+
+12. select * from customer where customerID not in (select customerID from payment);
+Empty set (0.00 sec)
+
+13. select v.*, sum(p.amount) from vehicle v left join lease l on v.vehicle_id = l.vehicle_id left join payment p on l.leaseID=p.leaseID group by vehicle_id;
++------------+-----------+----------+------+-----------+--------+--------------------+----------------+---------------+
+| vehicle_id | make      | model    | year | dailyRate | status | passsengerCapacity | engineCapacity | sum(p.amount) |
++------------+-----------+----------+------+-----------+--------+--------------------+----------------+---------------+
+|          1 | Toyota    | Camry    | 2022 |     50.00 | 1      |                  4 |           1450 |
+ 200.00 |
+|          2 | Honda     | Civic    | 2023 |     45.00 | 1      |                  7 |           1500 |
+1000.00 |
+|          3 | Ford      | Focus    | 2022 |     48.00 | 0      |                  4 |           1400 |
+   0.00 |
+|          4 | Nissan    | Altima   | 2023 |     52.00 | 1      |                  7 |           1200 |
+ 900.00 |
+|          5 | Chevrolet | Malibu   | 2022 |     47.00 | 1      |                  4 |           1800 |
+  60.00 |
+|          6 | Hyundai   | Sonata   | 2023 |     49.00 | 0      |                  7 |           1400 |
+   0.00 |
+|          7 | BMW       | 3 Series | 2023 |     60.00 | 1      |                  7 |           2499 |
+  40.00 |
+|          8 | Mercedes  | C-Class  | 2022 |     68.00 | 1      |                  8 |           2599 |
+1100.00 |
+|          9 | Audi      | A4       | 2022 |     55.00 | 0      |                  4 |           2500 |
+   0.00 |
+|         10 | Lexus     | ES       | 2023 |     54.00 | 1      |                  4 |           2500 |
+1500.00 |
++------------+-----------+----------+------+-----------+--------+--------------------+----------------+-------------------------+
+10 rows in set (0.00 sec)
+
+14. select c.customerID, c.FirstName, c.SecondName, IFNULL(SUM(p.amount), 0) from customer c left join lease l on c.customerID = l.customerID left join Payment p ON l.leaseID = p.leaseID group by c.customerID;
++------------+-----------+------------+--------------------------+
+| customerID | FirstName | SecondName | IFNULL(SUM(p.amount), 0) |
++------------+-----------+------------+--------------------------+
+|          1 | John      | Doe        |                   200.00 |
+|          2 | Jane      | Smith      |                  1000.00 |
+|          4 | Sarah     | Brown      |                   900.00 |
+|          5 | David     | Lee        |                    60.00 |
+|          6 | Laura     | Hall       |                     0.00 |
+|          7 | Michael   | Davis      |                    40.00 |
+|          8 | Emma      | Wilson     |                  1100.00 |
+|          9 | William   | Taylor     |                     0.00 |
+|         10 | Olivia    | Adams      |                  1500.00 |
++------------+-----------+------------+--------------------------+
+9 rows in set (0.00 sec)
+
+15. select l.*, v.*from lease l inner join vehicle v on l.vehicle_id = v.vehicle_id;
++---------+------------+------------+------------+------------+--------------+------------+-----------+----------+------+-----------+--------+--------------------+----------------+
+| leaseID | vehicle_id | customerID | startDate  | endDate    | type         | vehicle_id | make      | model    | year | dailyRate | status | passsengerCapacity | engineCapacity |
++---------+------------+------------+------------+------------+--------------+------------+-----------+----------+------+-----------+--------+--------------------+----------------+
+|       1 |          1 |          1 | 2023-01-01 | 2023-01-05 | DailyLease   |          1 | Toyota    | Camry    | 2022 |     50.00 | 1      |                  4 |           1450 |
+|       2 |          2 |          2 | 2023-02-15 | 2023-02-28 | MonthlyLease |          2 | Honda     | Civic    | 2023 |     45.00 | 1      |                  7 |           1500 |
+|       4 |          4 |          4 | 2023-04-20 | 2023-04-30 | MonthlyLease |          4 | Nissan    | Altima   | 2023 |     52.00 | 1      |                  7 |           1200 |
+|       5 |          5 |          5 | 2023-05-05 | 2023-05-10 | DailyLease   |          5 | Chevrolet | Malibu   | 2022 |     47.00 | 1      |                  4 |           1800 |
+|       7 |          7 |          7 | 2023-07-01 | 2023-07-10 | DailyLease   |          7 | BMW       | 3 Series | 2023 |     60.00 | 1      |                  7 |           2499 |
+|       8 |          8 |          8 | 2023-08-12 | 2023-08-15 | MonthlyLease |          8 | Mercedes  | C-Class  | 2022 |     68.00 | 1      |                  8 |           2599 |
+|      10 |         10 |         10 | 2023-10-10 | 2023-10-31 | MonthlyLease |         10 | Lexus     | ES       | 2023 |     54.00 | 1      |                  4 |           2500 |
++---------+------------+------------+------------+------------+--------------+------------+-----------+----------+------+-----------+--------+--------------------+----------------+
+7 rows in set (0.00 sec)
+
+16. select l.*, c.*, v.* from lease l inner join customer c on l.customerID = c.customerID inner join vehicle v ON l.vehicle_id = v.vehicle_id where l.endDate >= curdate();
+Empty set (0.00 sec)
+
+17.select c.customerID, c.FirstName, c.SecondName, sum(p.amount) as total_payments from customer c left join lease l on  c.customerID = l.customerID left join payment p on l.leaseID=p.leaseID group by c.cu
+stomerID, c.FirstName order by total_payments desc limit 1;
++------------+-----------+------------+----------------+
+| customerID | FirstName | SecondName | total_payments |
++------------+-----------+------------+----------------+
+|         10 | Olivia    | Adams      |        1500.00 |
++------------+-----------+------------+----------------+
+1 row in set (0.00 sec)
+
+18. select v.*, l.* from vehicle v left join lease l on v.vehicle_id = l.vehicle_id where l.endDate >= curdate() or l.endDate is null;
++------------+---------+--------+------+-----------+--------+--------------------+----------------+---------+------------+------------+-----------+---------+------+
+| vehicle_id | make    | model  | year | dailyRate | status | passsengerCapacity | engineCapacity | leaseID | vehicle_id | customerID | startDate | endDate | type |
++------------+---------+--------+------+-----------+--------+--------------------+----------------+---------+------------+------------+-----------+---------+------+
+|          3 | Ford    | Focus  | 2022 |     48.00 | 0      |                  4 |           1400 |    NULL |       NULL |       NULL | NULL      | NULL    | NULL |
+|          6 | Hyundai | Sonata | 2023 |     49.00 | 0      |                  7 |           1400 |    NULL |       NULL |       NULL | NULL      | NULL    | NULL |
+|          9 | Audi    | A4     | 2022 |     55.00 | 0      |                  4 |           2500 |    NULL |       NULL |       NULL | NULL      | NULL    | NULL |
++------------+---------+--------+------+-----------+--------+--------------------+----------------+---------+------------+------------+-----------+---------+------+
+3 rows in set (0.00 sec)
